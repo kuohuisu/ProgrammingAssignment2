@@ -1,31 +1,42 @@
-## Create a cacheMatrix object for an invertale matrix.
 
 makeCacheMatrix <- function(x = matrix()) {
-  cachedInverse <- NULL
+  inv <- NULL
   set <- function(y) {
     x <<- y
-    cachedInverse <<- NULL
+    inv <<- NULL
   }
   get <- function() x
-  setInverse <- function(inverse) cachedInverse <<- inverse
-  getInverse <- function() cachedInverse
-  list(set = set, get = get,
+  setInverse <- function(inverse) inv <<- inverse
+  getInverse <- function() inv
+  list(set = set,
+       get = get,
        setInverse = setInverse,
        getInverse = getInverse)
 }
 
 
-## Return the inverse of an cacheMatrix object
 
 cacheSolve <- function(x, ...) {
   ## Return a matrix that is the inverse of 'x'
-  invFunc <- x$getInverse()
-  if(!is.null(invFunc)) {
+  inv <- x$getInverse()
+  if (!is.null(inv)) {
     message("getting cached data")
-    return(invFunc)
+    return(inv)
   }
-  data <- x$get()
-  invFunc <- solve(data, ...)
-  x$setInverse(invFunc)
-  invFunc
+  mat <- x$get()
+  inv <- solve(mat, ...)
+  x$setInverse(inv)
+  inv
 }
+
+my_matrix <- makeCacheMatrix(matrix(1:4, 2, 2))
+my_matrix$get()
+my_matrix$getInverse()
+cacheSolve(my_matrix)
+cacheSolve(my_matrix)
+my_matrix$getInverse()
+my_matrix$set(matrix(c(2, 2, 1, 4), 2, 2))
+my_matrix$get()
+my_matrix$getInverse()
+cacheSolve(my_matrix)
+my_matrix$getInverse()
